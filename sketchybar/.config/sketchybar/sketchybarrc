@@ -1,0 +1,87 @@
+#!/bin/bash
+# SketchyBar, Catppuccin Mocha
+# Left:  workspaces (AeroSpace) + focused app
+# Right: coding time vs daily goal, problems solved today, cpu, battery, clock
+# Reload after edits: sketchybar --reload
+
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/sketchybar}"
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+source "$CONFIG_DIR/colors.sh"
+FONT="JetBrainsMono Nerd Font"
+
+# Daily coding goal in seconds (2 hours)
+export WAKA_GOAL_SECONDS=7200
+
+sketchybar --bar position=top height=32 margin=8 y_offset=6 corner_radius=8 \
+                 color=$BASE border_color=$SURFACE0 border_width=1 \
+                 padding_left=6 padding_right=6 sticky=on topmost=window
+
+sketchybar --default icon.font="$FONT:Bold:14.0" label.font="$FONT:Medium:12.0" \
+                     icon.color=$TEXT label.color=$TEXT \
+                     padding_left=3 padding_right=3 \
+                     icon.padding_left=6 icon.padding_right=4 \
+                     label.padding_left=0 label.padding_right=6 \
+                     background.height=22 background.corner_radius=5
+
+# ---------- left ----------
+sketchybar --add item logo left \
+           --set logo icon=󰘳 icon.color=$MAUVE label.drawing=off \
+                 click_script="open -a Raycast"
+
+sketchybar --add event aerospace_workspace_change
+for sid in 1 2 3 4 5; do
+  sketchybar --add item space.$sid left \
+             --subscribe space.$sid aerospace_workspace_change \
+             --set space.$sid label="$sid" icon.drawing=off \
+                   label.padding_left=7 label.padding_right=7 \
+                   background.color=$MAUVE background.drawing=off \
+                   click_script="/opt/homebrew/bin/aerospace workspace $sid" \
+                   script="$PLUGIN_DIR/aerospace.sh $sid"
+done
+
+sketchybar --add item front_app left \
+           --subscribe front_app front_app_switched \
+           --set front_app icon.drawing=off label.color=$SUBTEXT0 \
+                 label.padding_left=8 script="$PLUGIN_DIR/front_app.sh"
+
+# ---------- right (first added = rightmost) ----------
+sketchybar --add item clock right \
+           --set clock icon= icon.color=$MAUVE update_freq=20 \
+                 script="$PLUGIN_DIR/clock.sh"
+
+sketchybar --add item battery right \
+           --subscribe battery power_source_change system_woke \
+           --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh"
+
+sketchybar --add item cpu right \
+           --set cpu icon= icon.color=$BLUE update_freq=4 \
+                 script="$PLUGIN_DIR/cpu.sh"
+
+# Problems solved today (new solution files committed in ~/code/cp). Click for week + streak.
+sketchybar --add item solved right \
+           --subscribe solved system_woke mouse.clicked \
+           --set solved icon= icon.color=$YELLOW update_freq=60 \
+                 background.color=$SURFACE0 background.drawing=on \
+                 popup.background.color=$BASE popup.background.border_color=$SURFACE1 \
+                 popup.background.border_width=1 popup.background.corner_radius=8 \
+                 script="$PLUGIN_DIR/solved.sh"
+for row in week streak; do
+  sketchybar --add item solved.$row popup.solved \
+             --set solved.$row icon.drawing=off label.padding_left=10 label.padding_right=10
+done
+
+# Coding time today vs goal (WakaTime). Click for the last 7 days.
+sketchybar --add item wakatime right \
+           --subscribe wakatime system_woke mouse.clicked \
+           --set wakatime icon= icon.color=$GREEN update_freq=120 \
+                 background.color=$SURFACE0 background.drawing=on \
+                 popup.background.color=$BASE popup.background.border_color=$SURFACE1 \
+                 popup.background.border_width=1 popup.background.corner_radius=8 \
+                 script="$PLUGIN_DIR/wakatime.sh"
+for i in 0 1 2 3 4 5 6; do
+  sketchybar --add item wakatime.day.$i popup.wakatime \
+             --set wakatime.day.$i icon.drawing=off label.padding_left=10 label.padding_right=10
+done
+
+sketchybar --update

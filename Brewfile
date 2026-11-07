@@ -1,0 +1,35 @@
+tap "nikitabobko/tap"
+tap "FelixKratz/formulae"
+
+# apps and fonts
+cask "ghostty"
+cask "raycast"
+cask "nikitabobko/tap/aerospace"
+cask "font-jetbrains-mono-nerd-font"
+cask "font-sketchybar-app-font"
+cask "sf-symbols"
+
+# bar and window border
+brew "FelixKratz/formulae/sketchybar"
+brew "FelixKratz/formulae/borders"
+
+# terminal tools
+brew "starship"
+brew "eza"
+brew "bat"
+brew "fzf"
+brew "zoxide"
+brew "ripgrep"
+brew "fd"
+brew "lazygit"
+brew "git-delta"
+brew "btop"
+brew "jq"
+brew "tmux"
+brew "gh"
+brew "neovim"
+brew "stow"
+brew "wakatime-cli"
+brew "switchaudio-osx"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
