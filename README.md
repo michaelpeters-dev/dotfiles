@@ -24,7 +24,6 @@ cd ~/dotfiles
 | `starship/` | `~/.config/starship.toml` | prompt |
 | `zsh/` | `~/.config/zsh/extras.zsh` | theme colors, aliases, tool setup (sourced from `~/.zshrc`) |
 | `bat/` | `~/.config/bat/config` | `bat` theme |
-| `ubersicht/` | Übersicht widgets folder (copied) | desktop widget: coding time, 7-day chart, solves, streak, 13-week heatmap, CSES/LeetCode totals |
 | `wallpapers/` | | the Mocha mountains wallpaper |
 
 Neovim lives in its own repo at `~/.config/nvim` (michaelpeters-dev/nvim-config), now using `catppuccin-mocha`.

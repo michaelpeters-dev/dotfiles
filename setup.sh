@@ -111,15 +111,6 @@ else
 fi
 chmod +x "$HOME/.config/sketchybar/sketchybarrc" "$HOME/.config/sketchybar/plugins/"*.sh "$HOME/.config/borders/bordersrc" 2>/dev/null
 
-# desktop widget (Übersicht): coding time + problems solved
-if [ -d "/Applications/Übersicht.app" ]; then
-  open -a "Übersicht" >/dev/null 2>&1; sleep 2
-  W="$HOME/Library/Application Support/Übersicht/widgets"; mkdir -p "$W"
-  rm -rf "$W/coding-stats.widget"; cp -R "$DOT/ubersicht/coding-stats.widget" "$W/"
-  chmod +x "$DOT/ubersicht/coding-stats.sh"
-  ok "desktop widget installed (shows on any empty workspace)"
-fi
-
 # bat theme (Catppuccin Mocha)
 if command -v bat >/dev/null; then
   TD="$(bat --config-dir)/themes"; mkdir -p "$TD"

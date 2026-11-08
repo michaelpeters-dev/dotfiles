@@ -8,7 +8,6 @@ cask "nikitabobko/tap/aerospace"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-sketchybar-app-font"
 cask "sf-symbols"
-cask "ubersicht"
 
 # bar and window border
 brew "FelixKratz/formulae/sketchybar"
