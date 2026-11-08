@@ -11,7 +11,9 @@ echo "==> CSES: make private and push"
 gh repo edit "$OWNER/CSES" --visibility private --accept-visibility-change-consequences
 git -C "$HOME/code/cp/cses" push origin main
 
-echo "==> dotfiles: create private repo and push"
+echo "==> dotfiles: commit any pending changes, create private repo and push"
+git -C "$HOME/dotfiles" add -A
+git -C "$HOME/dotfiles" diff --cached --quiet || git -C "$HOME/dotfiles" commit -m "Update setup scripts"
 if gh repo view "$OWNER/dotfiles" >/dev/null 2>&1; then
   git -C "$HOME/dotfiles" remote get-url origin >/dev/null 2>&1 \
     || git -C "$HOME/dotfiles" remote add origin "https://github.com/$OWNER/dotfiles.git"

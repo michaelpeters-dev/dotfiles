@@ -58,6 +58,21 @@ if ls "$HOME/Library/LaunchAgents/"*.plist >/dev/null 2>&1; then
   [ -n "$hits" ] && { warn "launch agents that reference old paths (check these):"; echo "$hits"; }
 fi
 
+# Git worktrees store absolute paths, so moved ones need a repair (e.g. aq-pr180)
+find "$HOME/code" -maxdepth 5 -name .git -type f 2>/dev/null | while read -r g; do
+  gd="$(sed -n 's/^gitdir: //p' "$g")"
+  case "$gd" in /*) ;; *) continue ;; esac          # relative = submodule, fine
+  [ -d "$gd" ] && continue                          # still valid
+  wt="${gd##*/.git/worktrees/}"
+  newgd="$(find "$HOME/code" -maxdepth 6 -type d -path "*/.git/worktrees/$wt" 2>/dev/null | head -1)"
+  if [ -n "$newgd" ]; then
+    main="${newgd%/.git/worktrees/*}"
+    git -C "$main" worktree repair "$(dirname "$g")" && ok "repaired worktree $(dirname "$g")"
+  else
+    warn "worktree $(dirname "$g") points at a missing repo: $gd"
+  fi
+done
+
 # ------------------------------------------------------------------
 step "3/7  Shell: starship prompt + extras"
 ZRC="$HOME/.zshrc"; touch "$ZRC"
