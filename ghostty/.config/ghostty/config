@@ -26,8 +26,8 @@ palette = 13=#f5c2e7
 palette = 14=#94e2d5
 palette = 15=#a6adc8
 
-background-opacity = 0.96
-background-blur = 20
+background-opacity = 1.0
+# background-blur = 20  (off to save battery)
 window-padding-x = 10
 window-padding-y = 8
 window-padding-balance = true
